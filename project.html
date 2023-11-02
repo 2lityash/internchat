@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Chat</title>
+    <script type="text/javascript" src="first.js"></script>
+</head>
+<body>
+    <h1>WebSocket Chat</h1>
+    <div id="chat"></div>
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const socket = new WebSocket("ws://your-server-address"); 
+
+        socket.onopen = (event) => {
+            addToChat("Connected to the server.");
+        };
+
+        socket.onmessage = (event) => {
+            const message = event.data;
+            addToChat("Received: " + message);
+        };
+
+        socket.onclose = (event) => {
+            addToChat("Connection closed.");
+        };
+
+        function addToChat(message) {
+            const chat = document.getElementById("chat");
+            chat.innerHTML += message + "<br>";
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById("message");
+            const message = messageInput.value;
+            if (message) {
+                socket.send(message);
+                addToChat("Sent: " + message);
+                messageInput.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
+
